@@ -1,0 +1,25 @@
+/*
+ babel:转换特殊的语法(jsx)，及不支持的语法(es6)到指定环境可运行的语法，主要通过各种插件来转换
+ 我们可以自定义一种js语法，提供转换器即可
+*/
+{
+  "presets": ["es2015", "stage-0", "react"],//babel内置的转换插件集合
+  "plugins": [ //设置转换插件及插件特性
+    "espower", //转换标准assert到power-assert输出，power-assert输出描述了assert信息
+    "transform-runtime",//转换polyfill中的map，set等结构，使其不污染全局变量，polyfill提供了js标准的统一支持
+    "transform-decorators-legacy",//复制babel5中老的特性到babel6，达到无缝升级的目的
+    ["import", {"libraryName": "antd", "style": true}],//按需加载antd的组件及css
+    ["webpack-alias", {"config": "${process.cwd()}/webpack.development.config.js","findConfig":true}]//将webpack中配置的别名替换成真正的名称，默认加载webpack.config.js file or a webpack.config.babel.js at the root.
+  ],
+  "env": {
+    "production":{
+
+    },
+    "development":{
+
+    }
+  },
+  "ignore": [
+
+  ]
+}
