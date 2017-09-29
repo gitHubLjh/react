@@ -19,24 +19,20 @@ const FormItem = Form.Item
 @connect(
   (state, props) => ({
       config: state.config,
-      houseCheckSearchResult: state.houseCheckSearchResult,
+      houseCheckSearchResult: state.houseCheckSearchResult, // 连接属性和store中state，只要store中state发生变化，就会重新render组件
   })
 )
 export default class app extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            data: {
-
-            },
-        }
         this._handleSubmit = this._handleSubmit.bind(this)
     }
 
     componentDidMount() {
-        this.props.dispatch(fetchHouseCheckList({ currentPage: 1 }, (respose) => {}))
+        this.props.dispatch(fetchHouseCheckList({ currentPage: 1 }, (res) => {}))
     }
 
+    // 查询
     _handleSubmit(currentPage) {
         this.props.dispatch(fetchHouseCheckList({ keyword: '' }))
     }
@@ -48,7 +44,7 @@ export default class app extends Component {
                 title: '序号',
                 key: 'index',
                 width: '5%',
-                render: (text, recordId, index) => <span>{index + 1}</span>,
+                render: (text, record, index) => <span>{index + 1}</span>,
             },
             {
                 title: '建筑物地址',
@@ -89,57 +85,52 @@ export default class app extends Component {
             {
                 title: '操作',
                 key: 'operate',
-        // fixed: 'right',
+                fixed: 'right',
                 width: '10%',
                 render: function (text, record, index) {
                     return (
-            <span>
-              <Button type="primary" size="small">
-                <Link to={`/houseDetail/${text.id}`}>查看</Link>
-              </Button>
-            </span>
-          )
+                        <span>
+                          <Button type="primary" size="small">
+                            <Link to={`/houseDetail/${text.id}`}>查看</Link>
+                          </Button>
+                        </span>
+                      )
                 },
             },
         ]
     }
 
-    tableData() {
-        return this.props.houseCheckSearchQuery.list
-    }
-
     render() {
         const { houseCheckSearchResult, form } = this.props
         const { getFieldDecorator } = form
-    // console.log(houseCheckSearchResult)
         return (
-      <div className="page">
-        <div className="search" style={{ marginBottom: '10px' }}>
-          <Form onSubmit={this._handleSubmit} layout="inline">
-            <FormItem label="关键字">
-              {
-                getFieldDecorator('keyword', {
-                    rules: [{
-                        required: false,
-                    }],
-                })(
-                  <Input placeholder="请输入关键字" size="default" style={{ width: '200px' }} />
-                )
-              }
-            </FormItem>
-            <Button type="primary" onClick={this._handleSubmit}>确定</Button>
-          </Form>
-        </div>
-        <Spin spinning={houseCheckSearchResult.loading}>
-          <Table
-            dataSource={houseCheckSearchResult.list}
-            columns={this.columns()}
-            currentPage={houseCheckSearchResult.currentPage}
-            totalCount={houseCheckSearchResult.totalCount}
-            scroll={{ y: true }}
-          />
-        </Spin>
-      </div>
-    )
+          <div className="page">
+            <div className="search" style={{ marginBottom: '10px' }}>
+              <Form onSubmit={this._handleSubmit} layout="inline">
+                <FormItem label="关键字">
+                  {
+                    getFieldDecorator('keyword', {
+                        rules: [{
+                            required: false,
+                        }],
+                    })(
+                      <Input placeholder="请输入关键字" size="default" style={{ width: '200px' }} />
+                    )
+                  }
+                </FormItem>
+                <Button type="primary" onClick={this._handleSubmit}>确定</Button>
+              </Form>
+            </div>
+            <Spin spinning={houseCheckSearchResult.loading}>
+              <Table
+                dataSource={houseCheckSearchResult.list}
+                columns={this.columns()}
+                currentPage={houseCheckSearchResult.currentPage}
+                totalCount={houseCheckSearchResult.totalCount}
+                scroll={{ y: true }}
+              />
+            </Spin>
+          </div>
+        )
     }
 }

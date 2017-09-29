@@ -19,7 +19,7 @@ export default class LeftNav extends Component {
         const { pathname } = props.location
         this.state = {
             current: pathname,
-            openKeys: ['sub1'],
+            openKeys: [],
             isLeftNavMini: false,
         }
 
@@ -30,32 +30,30 @@ export default class LeftNav extends Component {
     }
 
     componentWillMount() {
-    // 初始化左侧菜单是mini模式还是正常模式
-        if (sessionStorage.getItem('isLeftNavMini') == 'false') {
+        if (sessionStorage.getItem('isLeftNavMini') === 'false') {
             this.setState({
                 isLeftNavMini: false,
             })
         }
-        if (sessionStorage.getItem('isLeftNavMini') == 'true') {
+        if (sessionStorage.getItem('isLeftNavMini') === 'true') {
             this.setState({
                 isLeftNavMini: true,
             })
         }
     }
-
+    // 点击Menu.Item触发，
     _handleClick(e) {
         const { actions } = this.props
-    // console.log('click ', e)
         this.setState({
             current: e.key,
-            openKeys: e.keyPath.slice(1),
+            openKeys: e.keyPath.slice(1), // 父menu
         }, () => {
-            actions.push(e.key)
-            this.props.dispatch(updateTabList({ title: e.item.props.name, content: '', key: e.key }))
+            actions.push(e.key) // type:routing payload:{push,e.key}
+            this.props.dispatch(updateTabList({ title: e.item.props.name, content: '', key: e.key }))// 传入payload
         })
     }
-
-    _handleToggle(openKeys) {
+    // SubMenu展开/关闭触发
+    _handleToggle(openKeys) { // 1,0 1
         const state = this.state;
         const latestOpenKey = openKeys.find(key => !(state.openKeys.indexOf(key) > -1));
         const latestCloseKey = state.openKeys.find(key => !(openKeys.indexOf(key) > -1));
@@ -69,85 +67,75 @@ export default class LeftNav extends Component {
         }
         this.setState({ openKeys: nextOpenKeys });
     }
+
     getAncestorKeys(key) {
         const map = {
             sub3: ['sub2'],
         };
         return map[key] || [];
     }
+
   // 左侧菜单切换显示模式
     navMini() {
         this.setState({
             isLeftNavMini: !this.state.isLeftNavMini,
         }, () => {
-      // console.log(this.state.isLeftNavMini)
             this.props.leftNavMode(this.state.isLeftNavMini)
         })
     }
-
-  // 二级菜单的生成
+  // 菜单生成
     renderLeftNav(options) {
         const self = this
         return options.map((item, index) => {
             if (!item.children) {
                 return (
-          // <SubMenu key={index} title={item.name}>
-            <Menu.Item key={item.url ? item.url : item.id} name={item.name}>
-              <Icon type={item.icon} title={item.name} />
-              <span className="menu-name">{item.name}</span>
-            </Menu.Item>
-          // </SubMenu>
-        )
+                    <Menu.Item key={item.url ? item.url : item.id} name={item.name}>
+                      <Icon type={item.icon} title={item.name} />
+                      <span className="menu-name">{item.name}</span>
+                    </Menu.Item>
+                )
             } else {
                 return (
-          <SubMenu key={index} title={
-            <span>
-              <Icon type="caret-down" title={item.name} />
-              <span className="menu-name">{item.name}</span>
-            </span>}>
-            {
-              item.url ?
-                <Menu.Item key={item.url} name={item.name}>
-                  <Icon type={item.icon} title={item.name} />
-                  <span className="menu-name">{item.name}</span>
-                </Menu.Item> : null
-            }
-
-            {
-              item.children && item.children.length > 0 ? self.renderLeftNav(item.children) : null
-            }
-          </SubMenu>
-        )
+                  <SubMenu key={index} title={
+                        <span>
+                          <Icon type="caret-down" title={item.name} />
+                          <span className="menu-name">{item.name}</span>
+                        </span>}>
+                    {
+                      item.url ?
+                        <Menu.Item key={item.url} name={item.name}>
+                          <Icon type={item.icon} title={item.name} />
+                          <span className="menu-name">{item.name}</span>
+                        </Menu.Item> : null
+                    }
+                    {
+                      item.children && item.children.length > 0 ? self.renderLeftNav(item.children) : null
+                    }
+                  </SubMenu>
+                )
             }
         })
     }
 
     render() {
-    // const { loading } = this.props.navResult
-    // const navs = this.props.config.NAVIGATION || []
-    // console.log('this.props.location', this.props.location)
         const selectedKeys = [`${this.props.location.pathname.split('$')[0]}$`.replace('/', '')]
         return (
-      <div className={this.state.isLeftNavMini ? 'LeftNavMini' : ''}>
-        <nav id="mainnav-container" className="mainnav-container">
-          <div className="LeftNav-control" onClick={this.navMini}>
-            <i className="qqbicon qqbicon-navcontrol" />
+          <div className={this.state.isLeftNavMini ? 'LeftNavMini' : ''}>
+            <nav id="mainnav-container" className="mainnav-container">
+                <div className="LeftNav-control" onClick={this.navMini}>
+                    <i className="qqbicon qqbicon-navcontrol"/>
+                </div>
+                <Menu onClick={this._handleClick}
+                    onOpenChange={this._handleToggle}
+                    theme="dark"
+                    mode="inline"
+                    openKeys={this.state.openKeys} // 当前展开的subMenu
+                    selectedKeys={selectedKeys} // 当前选中的menuItem
+                >
+                  { this.renderLeftNav(this.props.config.NAVIGATION || []) }
+                </Menu>
+            </nav>
           </div>
-          <Spin spinning={false}>
-            <Menu onClick={this._handleClick}
-              theme="dark"
-              openKeys={this.state.openKeys}
-              onOpenChange={this._handleToggle}
-              // selectedKeys={[`${this.props.location.pathname}`]}
-              selectedKeys={selectedKeys}
-              mode="inline"
-              // mode="vertical"
-            >
-              { this.renderLeftNav(this.props.config.NAVIGATION || []) }
-            </Menu>
-          </Spin>
-        </nav>
-      </div>
-    )
+        )
     }
 }

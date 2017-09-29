@@ -47,12 +47,11 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                loader: 'style!css!postcss!less',
+                loader: ExtractTextPlugin.extract('style', 'css!postcss!less'),
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader',
-                    'css-loader?sourceMap=true!postcss-loader?sourceMap=true!less-loader?sourceMap=true'),
+                loader: ExtractTextPlugin.extract('style', 'css!postcss!less'),
             },
             {
                 test: /\.(png|jpg)$/,
@@ -72,11 +71,11 @@ module.exports = {
         }),
         // 提取css样式到单独的文件
         new ExtractTextPlugin('vendor.[hash].css'),
-        // 提取公共代码，打包到单独文件中
-        // new webpack.optimize.CommonsChunkPlugin({
-        //     name: 'vendor', // 入口文件名
-        //     filename: 'vendor.bundle.js', // 打包后的文件名
-        // }),
+        // 提取vendor.js中的公共代码，打包到单独文件中common.js中
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            chunks: ['vendor'],
+        }),
         // 压缩优化代码
         // new webpack.optimize.UglifyJsPlugin({minimize: true}),
         // 根据index.html模板生成index.html页面，会自动加载打包后的文件

@@ -1,6 +1,6 @@
 import {
-  routerReducer as routing,
-} from 'react-router-redux'
+  routerReducer,
+} from 'react-router-redux' // reducer syncHistoryWithStore存放在store中的history信息，key为location
 import {
   combineReducers,
 } from 'redux'
@@ -17,8 +17,8 @@ import {
   loginResponse,
 } from './common'
 
-const rootReducer = combineReducers({
-    routing,
+const rootReducer = combineReducers({ // reducer全都会放入store中
+    routing: routerReducer,
     config: (state = {}) => state,
     tabListResult,
 
@@ -27,7 +27,6 @@ const rootReducer = combineReducers({
     houseCheckSearchResult,
     houseCheckSearchQuery,
     houseDetailResult,
-
 
 });
 

@@ -10,8 +10,7 @@ const TabPane = Tabs.TabPane
 
 @connect(
     (state, props) => ({ tabList: state.tabListResult }),
-    (dispatch) => ({ actions: bindActionCreators(routerActions, dispatch),
-      dispatch: dispatch })
+    (dispatch) => ({ actions: bindActionCreators(routerActions, dispatch), dispatch: dispatch }) // todo把dispatch成自动的
 )
 export default class TabList extends Component {
     constructor(props) {
@@ -20,40 +19,39 @@ export default class TabList extends Component {
         this.onEdit = this.onEdit.bind(this);
     }
     componentDidMount() {
-    // console.log('this.props', this.props);
     }
+    // tab切换时触发
     onChange(activeKey) {
-        const { actions } = this.props;
         this.props.dispatch(updateTabChecked({ activeKey: activeKey }))
-        actions.push(activeKey)
+        this.props.actions.push(activeKey) // 切换路由
     }
+    // 编辑(添加、删除)时触发
     onEdit(targetKey, action) {
         this[action](targetKey);
     }
+    // 删除时触发
     remove(targetKey) {
         const { actions, tabList } = this.props;
-        let delIndex
+        let delIndex = null
         let activeKey
-
         if (targetKey === tabList.activeKey) {
             tabList.list.map((tab, index) => {
                 tab.key === targetKey ? delIndex = index : null;
             });
-      // eslint-disable-next-line no-nested-ternary
             activeKey = tabList.list[delIndex + 1] ?
-        tabList.list[delIndex + 1].key : (tabList.list[delIndex - 1] ?
-          tabList.list[delIndex - 1].key : '');
+                 tabList.list[delIndex + 1].key : (tabList.list[delIndex - 1] ?
+                 tabList.list[delIndex - 1].key : '');
             actions.push(activeKey);
         }
         this.props.dispatch(deleteTabFromList({ targetKey: targetKey }));
     }
+    // 是否需要更新组件
     shouldComponentUpdate(nextProps, nextState) {
         const thisProps = this.props || {};
 
         if (Object.keys(thisProps).length !== Object.keys(nextProps).length) {
             return true;
         }
-    // eslint-disable-next-line no-restricted-syntax
         for (const key in nextProps) {
             if (thisProps[key] !== nextProps[key] || !is(thisProps[key], nextProps[key])) {
                 return true;
@@ -64,18 +62,18 @@ export default class TabList extends Component {
     render() {
         const { tabList } = this.props
         return (
-      <Tabs
-        hideAdd
-        onChange={this.onChange}
-        activeKey={tabList.activeKey}
-        type="editable-card"
-        onEdit={this.onEdit}
-      >
-        {
-          tabList.list.map((tab) =>
-            <TabPane tab={tab.title} key={tab.key}>{tab.content}</TabPane>)
-        }
-      </Tabs>
-    )
+          <Tabs
+            hideAdd
+            type="editable-card"
+            onChange={this.onChange}
+            onEdit={this.onEdit}
+            activeKey={tabList.activeKey}
+          >
+            {
+              tabList.list.map((tab) =>
+                <TabPane tab={tab.title} key={tab.key}>{tab.content}</TabPane>)
+            }
+          </Tabs>
+        )
     }
 }

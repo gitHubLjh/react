@@ -31,6 +31,7 @@ export default function configure(initialState) {
         router
     )(create)
     // 创建数据存储store，如果想得到某个时点的数据，就要对 Store 生成快照。这种时点的数据集合，就叫做 State，用store.getState()得到当前的state
+    // action会经过combineReducers中的每一个，如果type匹配就处理
     const store = createStoreWithMiddleware(rootReducer, initialState)
 
     // 处理react改变后热加载

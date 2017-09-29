@@ -40,6 +40,7 @@ export function fetchJSON(url, params, target) {
     if (target) {
         url = `${target}${url}${API_SUFFIX}`
     } else {
+        // http://localhost:8080/mockapi/data.json
         url = `${API_PREFIX}${url}${API_SUFFIX}`
     }
     return fetch(url, data)
@@ -54,6 +55,7 @@ export const fetchJSONByPost = (url, target) => query => {
     body: buildParams(query),
   }
   return fetchJSON(url, params)*/
+  // /mockapi/data
     return fetchJSON(url, query, target)
 }
 

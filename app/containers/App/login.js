@@ -1,15 +1,14 @@
-
-import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'  //连接react容器组件与redux的store
-import { hashHistory } from 'react-router'
-import { Spin, message, Form, Icon, Input, Button, Row, Col } from 'antd'
-import { fetchLogin } from 'actions/common'
+import React, {Component} from 'react'
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'  //连接react容器组件与redux的store
+import {hashHistory} from 'react-router'
+import {Spin, message, Form, Icon, Input, Button, Row, Col} from 'antd'
+import {fetchLogin} from 'actions/common'
 const FormItem = Form.Item
 
 /**
  * es7新写法,相当于
-  const mapStateToProps = state => ({
+ const mapStateToProps = state => ({
         config: state.config,
         loginResponse: state.loginResponse,
   })
@@ -17,9 +16,9 @@ const FormItem = Form.Item
  这样父逻辑组件的改变，就能传递给子ui组件，进而重新渲染ui组件。
 
  connect(mapStateToProps,mapDispatchToProps)(Component)用于连接组件props到store(state,dispatch)
-*/
+ */
 @connect(
-    (state, ownerProps) => {
+    (state, props) => {
         return {
             config: state.config,
             loginResponse: state.loginResponse,
@@ -35,10 +34,10 @@ const FormItem = Form.Item
      * }
      * submit作为prop传递给Login组件，submit对应的是一个方法，该方法是ActionCreator，要产生一个action，之后，redux会自动的将该action dispatch出去
      */
-    (dispatch, ownerProps)=>{
+    (dispatch, props) => {
         return {
             //将submit作为prop传递给Login组件，当login组件触发该属性时，调用对应的方法bindActionCreators，该方法会自动将action dispatch出去
-            submit: bindActionCreators({'type':'A'}, dispatch),
+            submit: bindActionCreators({'type': 'A'}, dispatch),
         }
     }
 )
@@ -51,12 +50,11 @@ const FormItem = Form.Item
  * mapPropsToFields：可以从store中取出数据并放入Form.Item中
  */
 @Form.create({
-    onFieldsChange(props, items) {
-        console.log(props);
+    onFieldsChange(props, items) {//表单项（from.item）变化时触发，items表单项相关的对象
         console.log(items);
     },
     mapPropsToFields(props){
-        console.log(props);
+
     }
 })
 
@@ -68,7 +66,6 @@ export default class Login extends Component {
             loading: false,
         }
         this.handleSubmit = this.handleSubmit.bind(this)//bind(this)的目的是让事件处理函数拥有上下文信息，这是js语言特性决定的
-        this.handleChange = this.handleChange.bind(this)
         this.checkPass = this.checkPass.bind(this)
         this.checkName = this.checkName.bind(this)
     }
@@ -77,46 +74,43 @@ export default class Login extends Component {
         e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.state.lo = true
-                // this.setState({loading: true})
+                this.state.loading = true
                 Object.keys(values).map((key) => values[key] = (values[key] && values[key].trim()))
-                /* this.props.dispatch(fetchLogin(values, (res) => {
-                 if (res.status == 1) {
-                 const query = this.props.form.getFieldsValue()
-                 global.$GLOBALCONFIG.staff = res.data.user
-                 sessionStorage.setItem('staff', JSON.stringify({ ...res.data.user }))
-                 sessionStorage.setItem('username', query.username)
-                 // sessionStorage.setItem('userName', res.data.user.userName)
-                 // sessionStorage.setItem('userpwd', query.password)
-                 sessionStorage.setItem('token', res.data.token)
-                 sessionStorage.setItem('isLeftNavMini', false)
-                 hashHistory.push('/')
-                 }
-                 }, (res) => {
-                 message.warning(res.msg)
-                 this.setState({
-                 loading: false
-                 })
-                 }))*/
+                // fetchLogin(values, (res) => {
+                //     if (res.status == 1) {
+                //         const query = this.props.form.getFieldsValue()
+                //         global.$GLOBALCONFIG.staff = res.data.user
+                //         sessionStorage.setItem('staff', JSON.stringify({...res.data.user}))
+                //         sessionStorage.setItem('username', query.username)
+                //         // sessionStorage.setItem('userName', res.data.user.userName)
+                //         // sessionStorage.setItem('userpwd', query.password)
+                //         sessionStorage.setItem('token', res.data.token)
+                //         sessionStorage.setItem('isLeftNavMini', false)
+                //         hashHistory.push('/')
+                //     }
+                // }, (res) => {
+                //     message.warning(res.msg)
+                //     this.setState({
+                //         loading: false
+                //     })
+                // });
                 sessionStorage.setItem('token', 'dupi')
                 hashHistory.push('/')
+            } else {
+                //弹出错误
+                message.error('登录失败')
             }
         })
     }
 
-    handleChange(e) {
-        const newState = {}
-        newState[e.target.name] = e.target.value
-        this.setState(newState)
-    }
 
-    // 组件已经加载到dom中
     componentDidMount() {
-        // this.props.dispatch(fetchLogin({ currentPage: 1 }))
+        console.log("load finish");
     }
 
     checkName(rule, value, callback) {
         if (value) {
+
         }
         callback()
     }
@@ -129,8 +123,7 @@ export default class Login extends Component {
 
 
     render() {
-        const { loginResponse } = this.props.loginResponse
-        const { getFieldDecorator } = this.props.form
+        const {getFieldDecorator} = this.props.form //经Form包装后，组件自带props.form属性
         return (
             <div>
                 <div className="sy_top"></div>
@@ -144,14 +137,13 @@ export default class Login extends Component {
                                         <FormItem hasFeedback>
                                             {getFieldDecorator('username', {
                                                 rules: [
-                                                    { required: true, message: '请输入用户名' },
-                                                    { validator: this.checkName },
+                                                    {required: true, message: '请输入用户名'},
+                                                    {validator: this.checkName}, //自定义校验规则
                                                     // { pattern: regExpConfig.IDcardTrim, message: '身份证号格式不正确' }
                                                 ],
-                                                // validateTrigger: 'onBlur',
                                             })(
                                                 <Input
-                                                    prefix={<Icon type="user" style={{ fontSize: 13 }} />}
+                                                    prefix={<Icon type="user" style={{fontSize: 13}}/>}
                                                     placeholder="请输入用户名"
                                                     type="text"
                                                 />
@@ -160,13 +152,13 @@ export default class Login extends Component {
                                         <FormItem hasFeedback>
                                             {getFieldDecorator('password', {
                                                 rules: [
-                                                    { required: true, message: '请输入密码' },
+                                                    {required: true, message: '请输入密码'},
+                                                    {validator: this.checkPass}, //自定义校验规则
                                                     // { pattern: regExpConfig.pwd, message: '密码只能是6-16个数字或者字母组成' }
                                                 ],
-                                                // validateTrigger: 'onBlur',
                                             })(
                                                 <Input
-                                                    prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+                                                    prefix={<Icon type="lock" style={{fontSize: 13}}/>}
                                                     placeholder="请输入密码"
                                                     type="password"
                                                 />

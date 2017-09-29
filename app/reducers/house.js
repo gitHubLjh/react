@@ -9,15 +9,17 @@ const listResultState = {
     pageCount: 0,
     pageSize: 20,
     totalCount: 0,
+    loading: true,
 }
 
 export const houseCheckSearchResult = handleActions({
+    // 发出请求前调用
     'request houseCheck list'(state, action) {
-        return { ...state, loading: false }
+        return { ...state, loading: true }
     },
+    // 收到响应后调用
     'receive houseCheck list'(state, action) {
-    // eslint-disable-next-line no-unused-vars
-        const { req, res } = action.payload
+        const { req, res } = action.payload // { req: data, res: res }
         if (hasResponseError(res)) {
             message.error(res.msg)
             return { ...state, loading: false }

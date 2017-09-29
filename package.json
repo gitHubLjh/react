@@ -1,10 +1,10 @@
 {
-  "name": "duxiaodu",
+  "name": "liujh",
   "version": "0.0.1",
-  "description": "duxiaodu",
+  "description": "liujh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/duxianwei520/react"
+    "url": "https://github.com/gitHubLjh/react"
   },
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "build": "webpack --config webpack.development.config.js --process --color",
     "lint": "eslint ./ --cache --fix --ignore-pattern .eslintignore"
   },
-  "author": "duxiaodu",
+  "author": "liujh",
   "devDependencies": {
     "babel": "~6.5.2",
     "babel-cli": "~6.11.4",
