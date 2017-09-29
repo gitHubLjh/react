@@ -11,7 +11,9 @@ const listResultState = {
     totalCount: 0,
     loading: true,
 }
-
+/**
+ * handleActions其实是reducer
+ */
 export const houseCheckSearchResult = handleActions({
     // 发出请求前调用
     'request houseCheck list'(state, action) {

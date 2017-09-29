@@ -1,4 +1,4 @@
-import {message} from 'antd'
+import { message } from 'antd'
 import {
     hashHistory,
 } from 'react-router'
@@ -21,12 +21,12 @@ const logOut = () => {
     hashHistory.push('/login')
 }
 /**
- * 要理解这种箭头写法
- *
+ * 箭头函数其实就是lambda表达式
+ * dispatch一个function，该function会被默认传入一个dispatch对象，且function被dispatch后会立即执行。
  */
 export const createAjaxAction = (api, startAction, endAction) => (data, cb, reject) =>
     (dispatch) => {
-        startAction && dispatch(startAction())
+        startAction && dispatch(startAction()) // 发出的action会经过每一个reducer，直到有与之对应的type去处理，reducer处理完action后，会产生新的state，由于state通过connect，以属性的方式与组件关联，只要state变化，connect就会通知store，store注册有监听，从而触发监听器来render组件。
         // 每个请求带上token
         const token = sessionStorage.getItem('token')
         if (token) {
@@ -35,8 +35,6 @@ export const createAjaxAction = (api, startAction, endAction) => (data, cb, reje
             }
             data.token = token || null
         }
-        // { currentPage: 1 ,token:f }
-        // { keyword: '' ,token:f }
         data = isArray(data) ? data : [data]
         let result
         api(...data)
@@ -142,7 +140,7 @@ export const hasResponseError = (data, errorHandler) => {
  }*/
 
 function catchError(error) {
-    const {response} = error
+    const { response } = error
     if (!response) {
         console.log(error)
         return

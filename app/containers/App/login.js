@@ -25,14 +25,15 @@ const FormItem = Form.Item
         }
     },
     /**
-     * mapDispatchToProps也可以是一个对象，如：
+     * mapDispatchToProps
+     * 也可以自定义函数，不将ActionCreators和dispatch绑定，自定义函数必须返回一个action对象，该action对象也会被自动的dispatch出去
      * {
      *   submit: (data) => {
                 type: 'SET_VISIBILITY_FILTER',
                 data: data
-            };
+            }
      * }
-     * submit作为prop传递给Login组件，submit对应的是一个方法，该方法是ActionCreator，要产生一个action，之后，redux会自动的将该action dispatch出去
+     * submit作为prop传递给Login组件，submit对应一个方法，该方法将ActionCreator和dispatch绑定，当ActionCreator产生action后会被自动的dispatch出去
      */
     (dispatch, props) => {
         return {

@@ -8,7 +8,9 @@ import {
   createAjaxAction,
 } from 'utils'
 
-
+/**
+ * createAction其实是Action生成者
+ */
 export const requestHouseCheckList = createAction('request houseCheck list');
 export const recevieHouseCheckList = createAction('receive houseCheck list');
 export const fetchHouseCheckList = createAjaxAction(

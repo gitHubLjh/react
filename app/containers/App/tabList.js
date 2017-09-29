@@ -10,7 +10,12 @@ const TabPane = Tabs.TabPane
 
 @connect(
     (state, props) => ({ tabList: state.tabListResult }),
-    (dispatch) => ({ actions: bindActionCreators(routerActions, dispatch), dispatch: dispatch }) // todo把dispatch成自动的
+    (dispatch) => ({
+        actions: bindActionCreators(routerActions, dispatch),
+        dispatch: dispatch,
+        tabChange: (activeKey) => dispatch(updateTabChecked({ activeKey: activeKey })),
+        tabChange2: (activeKey) => bindActionCreators(updateTabChecked({ activeKey: activeKey }), dispatch),
+    })
 )
 export default class TabList extends Component {
     constructor(props) {
@@ -22,7 +27,8 @@ export default class TabList extends Component {
     }
     // tab切换时触发
     onChange(activeKey) {
-        this.props.dispatch(updateTabChecked({ activeKey: activeKey }))
+        // this.props.dispatch(updateTabChecked({ activeKey: activeKey }))
+        this.tabChange(activeKey)
         this.props.actions.push(activeKey) // 切换路由
     }
     // 编辑(添加、删除)时触发

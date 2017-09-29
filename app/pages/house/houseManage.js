@@ -4,12 +4,12 @@
  * @Last Modified by: duxianwei
  * @Last Modified time: 2017-08-08 20:55:31
  */
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import { Button, Spin, Form, Input, Table } from 'antd'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Link} from 'react-router'
+import {Button, Spin, Form, Input, Table} from 'antd'
 import {
-  fetchHouseCheckList,
+    fetchHouseCheckList,
 } from 'actions/house'
 
 const FormItem = Form.Item
@@ -17,10 +17,13 @@ const FormItem = Form.Item
 @Form.create({})
 
 @connect(
-  (state, props) => ({
-      config: state.config,
-      houseCheckSearchResult: state.houseCheckSearchResult, // 连接属性和store中state，只要store中state发生变化，就会重新render组件
-  })
+    (state, props) => ({
+        config: state.config,
+        houseCheckSearchResult: state.houseCheckSearchResult, // 连接属性和store中state，只要store中state发生变化，就会重新render组件
+    }),
+    (dispatch, props) => ({
+        dispatch: dispatch,
+    })
 )
 export default class app extends Component {
     constructor(props) {
@@ -29,12 +32,13 @@ export default class app extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(fetchHouseCheckList({ currentPage: 1 }, (res) => {}))
+        // dispatch一个方法，该方法会出入store中dispatch对象，且该方法会立即执行
+        this.props.dispatch(fetchHouseCheckList({currentPage: 1}, (res) => {}))
     }
 
     // 查询
     _handleSubmit(currentPage) {
-        this.props.dispatch(fetchHouseCheckList({ keyword: '' }))
+        this.props.dispatch(fetchHouseCheckList({keyword: ''}))
     }
 
 
@@ -94,43 +98,43 @@ export default class app extends Component {
                             <Link to={`/houseDetail/${text.id}`}>查看</Link>
                           </Button>
                         </span>
-                      )
+                    )
                 },
             },
         ]
     }
 
     render() {
-        const { houseCheckSearchResult, form } = this.props
-        const { getFieldDecorator } = form
+        const {houseCheckSearchResult, form} = this.props
+        const {getFieldDecorator} = form
         return (
-          <div className="page">
-            <div className="search" style={{ marginBottom: '10px' }}>
-              <Form onSubmit={this._handleSubmit} layout="inline">
-                <FormItem label="关键字">
-                  {
-                    getFieldDecorator('keyword', {
-                        rules: [{
-                            required: false,
-                        }],
-                    })(
-                      <Input placeholder="请输入关键字" size="default" style={{ width: '200px' }} />
-                    )
-                  }
-                </FormItem>
-                <Button type="primary" onClick={this._handleSubmit}>确定</Button>
-              </Form>
+            <div className="page">
+                <div className="search" style={{marginBottom: '10px'}}>
+                    <Form onSubmit={this._handleSubmit} layout="inline">
+                        <FormItem label="关键字">
+                            {
+                                getFieldDecorator('keyword', {
+                                    rules: [{
+                                        required: false,
+                                    }],
+                                })(
+                                    <Input placeholder="请输入关键字" size="default" style={{width: '200px'}}/>
+                                )
+                            }
+                        </FormItem>
+                        <Button type="primary" onClick={this._handleSubmit}>确定</Button>
+                    </Form>
+                </div>
+                <Spin spinning={houseCheckSearchResult.loading}>
+                    <Table
+                        dataSource={houseCheckSearchResult.list}
+                        columns={this.columns()}
+                        currentPage={houseCheckSearchResult.currentPage}
+                        totalCount={houseCheckSearchResult.totalCount}
+                        scroll={{y: true}}
+                    />
+                </Spin>
             </div>
-            <Spin spinning={houseCheckSearchResult.loading}>
-              <Table
-                dataSource={houseCheckSearchResult.list}
-                columns={this.columns()}
-                currentPage={houseCheckSearchResult.currentPage}
-                totalCount={houseCheckSearchResult.totalCount}
-                scroll={{ y: true }}
-              />
-            </Spin>
-          </div>
         )
     }
 }
