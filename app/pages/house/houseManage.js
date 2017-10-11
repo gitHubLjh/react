@@ -31,8 +31,14 @@ export default class app extends Component {
         this._handleSubmit = this._handleSubmit.bind(this)
     }
 
+    /**
+     * 中间件：在dispatch出对象（函数、action）后，对象到达reducer前，能够织入一些切面逻辑，如打印action、state日志，报告异常等。
+     * thunk middleWare的作用：在dispatch出对象后，判断对象的类型，如果是action，直接dispatch；如果是函数，就执行该函数逻辑，并传入dispatch对象，
+     * 这样就可以在函数中使用dispatch对象完成异步任务
+     *
+     */
     componentDidMount() {
-        // dispatch一个方法，该方法会出入store中dispatch对象，且该方法会立即执行
+        // 由于使用了thunk middleWare，所以dispatch可以传入方法对象，否则，dispatch只能action
         this.props.dispatch(fetchHouseCheckList({currentPage: 1}, (res) => {}))
     }
 

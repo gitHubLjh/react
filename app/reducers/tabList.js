@@ -26,7 +26,8 @@ const tabListResult = handleActions({
     'update tab checked': (state, action) => {
         const activeKey = action.payload.activeKey;
         sessionStorage.setItem('tabList', JSON.stringify({ ...state, activeKey, loading: false }));
-        return { ...state, activeKey, loading: false }
+        console.log(activeKey+"====");
+        return { ...state, activeKey, loading: false } // 对象展开语法
     },
     // 删除tab
     'delete tab from list': (state, action) => {

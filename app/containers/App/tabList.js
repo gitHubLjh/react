@@ -1,20 +1,34 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { routerActions } from 'react-router-redux'
+import { routerActions, push } from 'react-router-redux' // 连接route、history和store
 import { is } from 'immutable';
 import { Tabs } from 'antd'
-import { updateTabChecked, deleteTabFromList } from '../../actions/tabList'
+// import { updateTabChecked, deleteTabFromList } from '../../actions/tabList'
+import * as TabActionCreators from '../../actions/tabList'
 
 const TabPane = Tabs.TabPane
-
+/**
+ * bindActionCreators 对所有的actionCreator进行包装，由于传入了dispatch函数，所以包装后的actionCreator直接dispatch了产生的action，如下
+ * function actionCreator(payload){
+        return{
+            type:type,
+            payload:payload
+        }
+    }
+    经过bindActionCreators包装后的actionCreator如下：
+    function actionCreator(payload){
+        dispatch( actionCreator(payload));
+    }
+ */
 @connect(
     (state, props) => ({ tabList: state.tabListResult }),
     (dispatch) => ({
         actions: bindActionCreators(routerActions, dispatch),
         dispatch: dispatch,
-        tabChange: (activeKey) => dispatch(updateTabChecked({ activeKey: activeKey })),
-        tabChange2: (activeKey) => bindActionCreators(updateTabChecked({ activeKey: activeKey }), dispatch),
+        // updateTab: (activeKey) => dispatch(updateTabChecked({ activeKey: activeKey })),
+        // deleteTab: (activeKey) => dispatch(deleteTabFromList({ activeKey: activeKey })),
+        tabChange: bindActionCreators(TabActionCreators, dispatch),
     })
 )
 export default class TabList extends Component {
@@ -26,10 +40,15 @@ export default class TabList extends Component {
     componentDidMount() {
     }
     // tab切换时触发
+    /**
+     *
+     */
     onChange(activeKey) {
         // this.props.dispatch(updateTabChecked({ activeKey: activeKey }))
-        this.tabChange(activeKey)
-        this.props.actions.push(activeKey) // 切换路由
+        // this.props.updateTab(activeKey)
+        this.props.tabChange.updateTabChecked({ activeKey: activeKey })
+        // this.props.actions.push(activeKey) // 切换路由
+        this.props.dispatch(push(activeKey)); // push(path)产生action对象 type?
     }
     // 编辑(添加、删除)时触发
     onEdit(targetKey, action) {
@@ -49,7 +68,9 @@ export default class TabList extends Component {
                  tabList.list[delIndex - 1].key : '');
             actions.push(activeKey);
         }
-        this.props.dispatch(deleteTabFromList({ targetKey: targetKey }));
+        // this.props.dispatch(deleteTabFromList({ targetKey: targetKey }));
+        // this.props.deleteTab(targetKey);
+        this.props.tabChange.deleteTabFromList({ targetKey: targetKey });
     }
     // 是否需要更新组件
     shouldComponentUpdate(nextProps, nextState) {

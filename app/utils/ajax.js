@@ -46,7 +46,6 @@ export function fetchJSON(url, params, target) {
     return fetch(url, data)
 }
 
-
 // eslint-disable-next-line arrow-parens
 export const fetchJSONByPost = (url, target) => query => {
   // 下面是注释用formdata的方式传输数据

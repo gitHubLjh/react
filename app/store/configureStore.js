@@ -18,8 +18,6 @@ const nextReducer = require('../reducers')
  * 后就会先调用中间件逻辑。
  */
 export default function configure(initialState) {
-    console.log('initialState', initialState)
-
     const create = window.devToolsExtension
     ? window.devToolsExtension()(createStore)
     : createStore

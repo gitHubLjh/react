@@ -26,7 +26,7 @@ const logOut = () => {
  */
 export const createAjaxAction = (api, startAction, endAction) => (data, cb, reject) =>
     (dispatch) => {
-        startAction && dispatch(startAction()) // 发出的action会经过每一个reducer，直到有与之对应的type去处理，reducer处理完action后，会产生新的state，由于state通过connect，以属性的方式与组件关联，只要state变化，connect就会通知store，store注册有监听，从而触发监听器来render组件。
+        startAction && dispatch(startAction()) // 发出的action会经过每一个reducer，直到有与之对应的type去处理，reducer处理完action后，会产生新的state，由于state通过connect以属性的方式与组件关联，只要state变化，connect就会通知store，store注册有监听，从而触发监听器来重新render组件。
         // 每个请求带上token
         const token = sessionStorage.getItem('token')
         if (token) {
@@ -58,8 +58,7 @@ export const createAjaxAction = (api, startAction, endAction) => (data, cb, reje
                         }
                     }
                 }
-            })
-            .catch(catchError) // eslint-disable-line no-use-before-define
+            }).catch(catchError) // eslint-disable-line no-use-before-define
     }
 
 /* export const createAjax = (url, param, callback) => {

@@ -8,9 +8,6 @@ import {
   createAjaxAction,
 } from 'utils'
 
-/**
- * createAction其实是Action生成者
- */
 export const requestHouseCheckList = createAction('request houseCheck list');
 export const recevieHouseCheckList = createAction('receive houseCheck list');
 export const fetchHouseCheckList = createAjaxAction(
@@ -24,6 +21,8 @@ export const resetHouseCheckListQuery = createAction('reset houseCheck search qu
 
 export const requestHouseDetail = createAction('request house detail')
 export const recevieHouseDetail = createAction('receive house detail')
+
+// 创建异步action
 export const fetchHouseDetail = createAjaxAction(
     house.houseDetail,
     requestHouseDetail,
