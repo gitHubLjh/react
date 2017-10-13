@@ -50,8 +50,8 @@
 
 // 用lambda =>语法实现
 export default store => next => action => {
-    console.log(action)
+    //console.log(action)
     const result = next(action)
-    console.log('next state', store.getState())
+   // console.log('next state', store.getState())
     return result
 }

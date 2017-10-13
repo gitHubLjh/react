@@ -6,15 +6,19 @@
  */
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Link} from 'react-router'
-import {Button, Spin, Form, Input, Table} from 'antd'
+import {Link,hashHistory} from 'react-router'
+import {Button, Spin, Form, Input, Table, message, Popconfirm} from 'antd'
 import {
     fetchHouseCheckList,
 } from 'actions/house'
 
 const FormItem = Form.Item
 
-@Form.create({})
+@Form.create({
+    onFieldsChange(props, items) {
+        //console.log(items);
+    },
+})
 
 @connect(
     (state, props) => ({
@@ -29,6 +33,7 @@ export default class app extends Component {
     constructor(props) {
         super(props)
         this._handleSubmit = this._handleSubmit.bind(this)
+        this._handleDelete = this._handleDelete.bind(this)
     }
 
     /**
@@ -44,68 +49,80 @@ export default class app extends Component {
 
     // 查询
     _handleSubmit(currentPage) {
-        this.props.dispatch(fetchHouseCheckList({keyword: ''}))
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                Object.keys(values).map((key) => values[key] = (values[key] && values[key].trim()))
+                let keyword = values['keyword']
+                this.props.dispatch(fetchHouseCheckList({currentPage: 1,keyword: keyword}))
+            } else {
+                message.error('操作失败')
+            }
+        })
     }
-
+    _handleDelete(key){
+        console.log('delete',key)
+    }
 
     columns() {
         return [
             {
                 title: '序号',
                 key: 'index',
-                width: '5%',
+                width: 50,
                 render: (text, record, index) => <span>{index + 1}</span>,
             },
             {
                 title: '建筑物地址',
                 dataIndex: 'address',
                 key: 'address',
-                width: '25%',
+                width: 250,
             },
             {
                 title: '行政区划',
                 dataIndex: 'division',
                 key: 'division',
-                width: '10%',
+                width: 250,
             },
             {
                 title: '管辖单位',
                 dataIndex: 'institutions',
                 key: 'institutions',
-                width: '10%',
+                width: 150,
             },
             {
                 title: '管辖警员',
                 dataIndex: 'policeName',
                 key: 'policeName',
-                width: '10%',
+                width: 100,
             },
             {
                 title: '房屋状态',
                 dataIndex: 'houseStatus',
                 key: 'houseStatus',
-                width: '15%',
+                width: 150,
             },
             {
                 title: '地址属性',
                 dataIndex: 'addressType',
                 key: 'addressType',
-                width: '15%',
             },
             {
                 title: '操作',
                 key: 'operate',
-                fixed: 'right',
-                width: '10%',
-                render: function (text, record, index) {
-                    return (
-                        <span>
-                          <Button type="primary" size="small">
-                            <Link to={`/houseDetail/${text.id}`}>查看</Link>
-                          </Button>
-                        </span>
-                    )
-                },
+                width: 250,
+                render:  (text, record, index) => (
+                    <span>
+                        <Button>
+                            <Link to={`/houseDetail`}>查看</Link>
+                        </Button>&nbsp;&nbsp;
+                        <Button>
+                            <Link to={`/houseEdit`}>修改</Link>
+                        </Button>&nbsp;&nbsp;
+                         <Popconfirm title="确认删除吗?" onConfirm={() => this._handleDelete(record.key)}>
+                            <Button href="#">删除</Button>
+                        </Popconfirm>
+                    </span>
+                )
             },
         ]
     }
@@ -116,23 +133,22 @@ export default class app extends Component {
         return (
             <div className="page">
                 <div className="search" style={{marginBottom: '10px'}}>
-                    <Form onSubmit={this._handleSubmit} layout="inline">
+                    <Form onSubmit={this._handleSubmit} layout="inline"
+                          className="ant-advanced-search-form">
                         <FormItem label="关键字">
-                            {
-                                getFieldDecorator('keyword', {
+                            {getFieldDecorator('keywork', {
                                     rules: [{
                                         required: false,
                                     }],
-                                })(
-                                    <Input placeholder="请输入关键字" size="default" style={{width: '200px'}}/>
-                                )
+                                 })(<Input placeholder="请输入关键字" size="default" style={{width: '200px'}}/>)
                             }
                         </FormItem>
-                        <Button type="primary" onClick={this._handleSubmit}>确定</Button>
+                        <Button type="primary" onClick={this._handleSubmit}>查询</Button>
                     </Form>
                 </div>
                 <Spin spinning={houseCheckSearchResult.loading}>
                     <Table
+                        bordered
                         dataSource={houseCheckSearchResult.list}
                         columns={this.columns()}
                         currentPage={houseCheckSearchResult.currentPage}

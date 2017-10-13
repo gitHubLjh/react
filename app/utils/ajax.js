@@ -1,8 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { API_PREFIX, API_SUFFIX } from '../constants'
 
-// todo : 连接store
-// const code = global.$GLOBALCONFIG.STAFF.code
 
 function buildParams(obj) {
     if (!obj) {

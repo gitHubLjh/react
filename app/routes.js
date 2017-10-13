@@ -10,6 +10,18 @@ const houseManage = (location, cb) => {
     }, 'houseManage')
 }
 
+const houseDetail = (location, cb) => {
+    require.ensure([], require => {
+        cb(null, require('./pages/house/houseDetail').default)
+    }, 'houseDetail')
+}
+
+const houseEdit = (location, cb) => {
+    require.ensure([], require => {
+        cb(null, require('./pages/house/houseEdit').default)
+    }, 'houseDetail')
+}
+
 
 const Login = (location, cb) => {
     require.ensure([], require => {
@@ -38,6 +50,8 @@ const routes = (
         <Route path="/" component={App} onEnter={isLogin}>
             <IndexRoute component={Welcome} />
             <Route path="/houseManage" getComponent={houseManage} />
+            <Route path="/houseDetail" getComponent={houseDetail} />
+            <Route path="/houseEdit" getComponent={houseEdit} />
             <Route path="/test" getComponent={test} query={{ }} />
         </Route>
         <Route path="/login" getComponent={Login} />

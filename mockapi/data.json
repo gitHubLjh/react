@@ -2,7 +2,7 @@
   "data": {
     "list": [
       {
-        "id": "1",
+        "key": "1",
         "address": "鄂尔多斯东胜区纺织街道23号4幢",
         "division": "东胜区纺织街",
         "institutions": "幸福街派出所",
@@ -11,7 +11,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "2",
+        "key": "2",
         "address": "鄂尔区纺织街道23号4幢",
         "division": "东胜区纺织街2",
         "institutions": "幸福街派出所2",
@@ -20,7 +20,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "3",
+        "key": "3",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -29,7 +29,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "4",
+        "key": "4",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -38,7 +38,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "5",
+        "key": "5",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -47,7 +47,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "6",
+        "key": "6",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -56,7 +56,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "7",
+        "key": "7",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -65,7 +65,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "8",
+        "key": "8",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -74,7 +74,7 @@
         "addressType": "标准地址"
       },
       {
-        "id": "9",
+        "key": "9",
         "address": "鄂尔区纺织街道23号4幢3",
         "division": "东胜区纺织街3",
         "institutions": "幸福街派出所3",
@@ -86,7 +86,7 @@
     "totalCount": 100,
     "currentPage": 1
   },
-  "msg": "没有权限",
+  "msg": "success",
   "errorCode": "",
   "status": 1
 }

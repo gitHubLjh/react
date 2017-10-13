@@ -49,12 +49,10 @@ export const houseCheckSearchQuery = handleActions({
 
 
 const detailResultState = {
-    allowRole: {},
-    shopInfo: {},
 }
 export const houseDetailResult = handleActions({
     'request house detail'(state, action) {
-        return { ...state, loading: false }
+        return { ...state, loading: true }
     },
     'receive house detail'(state, action) {
         const { res } = action.payload

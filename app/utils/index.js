@@ -37,28 +37,26 @@ export const createAjaxAction = (api, startAction, endAction) => (data, cb, reje
         }
         data = isArray(data) ? data : [data]
         let result
-        api(...data)
-            .then(checkStatus) // eslint-disable-line no-use-before-define
-            .then(response => response.json())
-            .then((res) => {
-                result = res
-                endAction && dispatch(endAction({ req: data, res: res }))
-            })
-            .then(() => {
-                if (result.status === 1) { // 成功
-                    cb && cb(result)
+        api(...data).then(checkStatus)
+        .then(response => response.json())
+        .then((res) => {
+            result = res
+            endAction && dispatch(endAction({ req: data, res: res }))
+        }).then(() => {
+            if (result.status === 1) { // 成功
+                cb && cb(result)
+            } else {
+                if (result.errorCode == '101') {
+                    logOut()
                 } else {
-                    if (result.errorCode == '101') {
-                        logOut()
+                    if (typeof (reject) === 'function') {
+                        reject(result)
                     } else {
-                        if (typeof (reject) === 'function') {
-                            reject(result)
-                        } else {
-                            message.error(result.msg)
-                        }
+                        message.error(result.msg)
                     }
                 }
-            }).catch(catchError) // eslint-disable-line no-use-before-define
+            }
+        }).catch(catchError)
     }
 
 /* export const createAjax = (url, param, callback) => {

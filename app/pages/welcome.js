@@ -1,11 +1,3 @@
-/*
- * @Author: dupi
- * @Date: 2017-06-27 13:51:09
- * @Last Modified by: dupi
- * @Last Modified time: 2017-06-27 15:09:38
- */
-
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 

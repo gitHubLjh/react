@@ -1,12 +1,4 @@
-/*
- * @Author: dupi
- * @Date: 2017-06-29 15:34:19
- * @Last Modified by: dupi
- * @Last Modified time: 2017-06-29 15:39:44
- */
-
 import React, { Component } from 'react'
-import ReactDom from 'react-dom'
 import { connect } from 'react-redux'
 import { Cascader, Select, Row, Col, Checkbox, Button } from 'antd'
 
@@ -34,12 +26,12 @@ export default class popCheck extends Component {
 
     render() {
         return (
-      <div className="page">
-        测试
-        <span>weorwe</span>
-        <img src="../../images/default.png" />
-        <Sub />
-      </div>
-    )
+          <div className="page">
+            测试
+            <span>weorwe</span>
+            <img src="../../images/default.png" />
+            <Sub />
+          </div>
+        )
     }
 }

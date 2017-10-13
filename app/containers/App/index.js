@@ -58,6 +58,7 @@ export default class App extends Component {
 
     render() {
         const { location, children } = this.props
+        console.log(children)
         return (
           <div id="container" className="effect easeInOutBack mainnav-lg aside-bright">
             <Header />
