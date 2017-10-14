@@ -93,7 +93,7 @@ export default class Edit extends Component {
                     <Breadcrumb.Item>An Application</Breadcrumb.Item>
                 </Breadcrumb>
                 <Spin spinning={houseDetailResult.loading}>
-                    <Form onSubmit={this._handleSubmit} layout="horizontal"  className="ant-advanced-search-form">
+                    <Form onSubmit={this._handleSubmit} layout="inline"  className="ant-advanced-search-form">
                         <Row gutter={16} style={{padding:5}}>
                             <Col span={12} >
                                 <FormItem label={(
