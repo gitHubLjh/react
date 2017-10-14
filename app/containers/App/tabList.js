@@ -92,6 +92,7 @@ export default class TabList extends Component {
           <Tabs
             hideAdd
             type="editable-card"
+            // type="type"
             onChange={this.onChange}
             onEdit={this.onEdit}
             activeKey={tabList.activeKey}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Button, Spin, Form, Input, message, Row, Col, Breadcrumb } from 'antd'
+import { Button, Spin, Form, Input, message, Row, Col, Icon, Breadcrumb, Tooltip } from 'antd'
 import { fetchHouseDetail } from 'actions/house'
 import { push } from 'react-router-redux'
 
@@ -25,12 +25,14 @@ const FormItem = Form.Item
         dispatch: dispatch,
     })
 )
+
 export default class Edit extends Component {
 
     constructor(props) {
         super(props)
         this._handleBack = this._handleBack.bind(this)
         this._handleSubmit = this._handleSubmit.bind(this)
+        this.hasErrors = this.hasErrors.bind(this)
     }
 
     componentDidMount() {
@@ -55,10 +57,23 @@ export default class Edit extends Component {
             }
         });
     }
+    // 响应每个filed的keyup时间
+    hasErrors(fieldsError){
+        return Object.keys(fieldsError).some(field => fieldsError[field]);
+    }
+
+    // 自定义校验
+    checkAddress = (rule, value, callback) => {
+        if (value && value !== '123') {
+            callback('地址不正确');
+        } else {
+            callback();
+        }
+    }
 
     render() {
-        const { houseDetailResult, form } = this.props
-        const { getFieldDecorator } = form
+        const { houseDetailResult, form} = this.props
+        const { getFieldDecorator,getFieldsError } = form
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -78,19 +93,29 @@ export default class Edit extends Component {
                     <Breadcrumb.Item>An Application</Breadcrumb.Item>
                 </Breadcrumb>
                 <Spin spinning={houseDetailResult.loading}>
-                    <Form onSubmit={this._handleSubmit} layout="inline">
+                    <Form onSubmit={this._handleSubmit} layout="horizontal"  className="ant-advanced-search-form">
                         <Row gutter={16} style={{padding:5}}>
                             <Col span={12} >
-                                <FormItem label="建筑物地址"
+                                <FormItem label={(
+                                            <span>
+                                                <Tooltip title="请输入建筑物地址?">
+                                                    建筑物地址 <Icon type="question-circle-o" />
+                                                </Tooltip>
+                                            </span>
+                                          )}
                                     {...formItemLayout}
                                     hasFeedback>
                                     {getFieldDecorator('address', {
                                         rules: [{
-                                            required: true, message: 'Please input address',
+                                            required: true, message: '请输入地址',
+                                        },{
+                                            validator: this.checkAddress,
                                         }],
                                         initialValue: houseDetailResult.address,
                                     })(
-                                        <Input placeholder="建筑物地址" size="default" style={{width: '250px'}}/>
+                                        <Input placeholder="建筑物地址"
+                                               prefix={<Icon type="user" />}
+                                               style={{width: '250px'}}/>
                                     )}
                                 </FormItem>
                             </Col>
@@ -161,7 +186,7 @@ export default class Edit extends Component {
                         <Row gutter={16} style={{padding:10}}>
                             <Col span={8} offset={8}>
                                 <FormItem>
-                                    <Button type="primary" htmlType="submit">保存</Button>&nbsp;&nbsp;
+                                    <Button type="primary" htmlType="submit" disabled={ this.hasErrors(getFieldsError()) }>保存</Button>&nbsp;&nbsp;
                                     <Button onClick={this._handleBack}>返回</Button>
                                 </FormItem>
                             </Col>
