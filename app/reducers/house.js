@@ -10,6 +10,8 @@ const listResultState = {
     pageSize: 20,
     totalCount: 0,
     loading: true,
+    visible: false,
+    confirmLoading: false,
 }
 /**
  * handleActions其实是reducer
@@ -27,6 +29,9 @@ export const houseCheckSearchResult = handleActions({
             return { ...state, loading: false }
         }
         return { ...res.data, loading: false }
+    },
+    'toggle add house model window'(state, action) {
+        return { ...state, visible: action.payload.visible,confirmLoading: action.payload.confirmLoading }
     },
 }, listResultState)
 

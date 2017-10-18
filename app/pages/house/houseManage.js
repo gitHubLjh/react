@@ -7,9 +7,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link,hashHistory} from 'react-router'
-import {Button, Spin, Form, Input, Table, message, Popconfirm} from 'antd'
+import {Button, Spin, Form, Input, Table, message, Popconfirm, Modal, Tooltip, Icon} from 'antd'
 import {
     fetchHouseCheckList,
+    toggleModelWindow,
 } from 'actions/house'
 
 const FormItem = Form.Item
@@ -30,10 +31,12 @@ const FormItem = Form.Item
     })
 )
 export default class app extends Component {
+
     constructor(props) {
         super(props)
         this._handleSubmit = this._handleSubmit.bind(this)
         this._handleDelete = this._handleDelete.bind(this)
+        this._handleAdd = this._handleAdd.bind(this)
     }
 
     /**
@@ -67,6 +70,34 @@ export default class app extends Component {
     }
     _handleDelete(key){
         console.log('delete',key)
+    }
+
+    // 显示model window
+    _handleAdd(){
+        this.props.dispatch(toggleModelWindow({ visible:true, confirmLoading: false }))
+    }
+
+    handleOk = () => {
+        this.props.dispatch(toggleModelWindow({ visible:true, confirmLoading: true }))
+        // 提交表单
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                Object.keys(values).map((key) => values[key] = (values[key] && values[key].trim()))
+                // 模拟ajax数据提交
+                setTimeout(() => {
+                    this.props.dispatch(toggleModelWindow({ visible:false, confirmLoading: false }))
+                    message.success('操作成功');
+                    this.props.dispatch(fetchHouseCheckList({currentPage: 1}, (res) => {}))
+                }, 2000);
+            } else {
+                message.error('操作失败')
+                this.props.dispatch(toggleModelWindow({ visible:true, confirmLoading: false }))
+            }
+        })
+    }
+
+    handleCancel = () => {
+        this.props.dispatch(toggleModelWindow({ visible:false, confirmLoading: false }))
     }
 
     columns() {
@@ -133,11 +164,87 @@ export default class app extends Component {
         ]
     }
 
+
     render() {
         const {houseCheckSearchResult, form} = this.props
         const {getFieldDecorator} = form
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 24 },
+                sm: { span: 8 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 16 },
+            },
+        };
         return (
             <div className="page">
+                <Modal title="Title"
+                       visible={houseCheckSearchResult.visible}
+                       onOk={this.handleOk}
+                       confirmLoading={houseCheckSearchResult.confirmLoading}
+                       onCancel={this.handleCancel} >
+                    <Form layout="inline">
+                        <FormItem label='建筑物地址' {...formItemLayout} hasFeedback>
+                            {getFieldDecorator('address', {
+                                rules: [{
+                                    required: true, message: '请输入地址',
+                                }],
+                            })(
+                                <Input placeholder="建筑物地址"
+                                   prefix={<Icon type="user" />}
+                                   style={{width: '250px'}}/>
+                            )}
+                        </FormItem>
+                        <FormItem label="行政区划" hasFeedback  {...formItemLayout}>
+                            {getFieldDecorator('division', {
+                                rules: [{
+                                    required: true, message: 'Please input division',
+                                }],
+                            })(
+                                <Input placeholder="行政区划" size="default" style={{width: '250px'}}/>
+                            )}
+                        </FormItem>
+
+                        <FormItem label="管辖单位" hasFeedback  {...formItemLayout}>
+                            {getFieldDecorator('institutions', {
+                                rules: [{
+                                    required: true, message: 'Please input institutions',
+                                }],
+                            })(
+                                <Input placeholder="管辖单位" size="default" style={{width: '250px'}}/>
+                            )}
+                        </FormItem>
+                        <FormItem label="管辖警员" hasFeedback  {...formItemLayout}>
+                            {getFieldDecorator('policeName', {
+                                rules: [{
+                                    required: true, message: 'Please input policeName',
+                                }],
+                            })(
+                                <Input placeholder="管辖警员" size="default" style={{width: '250px'}}/>
+                            )}
+                        </FormItem>
+
+                        <FormItem label="房屋状态" hasFeedback  {...formItemLayout}>
+                            {getFieldDecorator('houseStatus', {
+                                rules: [{
+                                    required: true, message: 'Please input houseStatus',
+                                }],
+                            })(
+                                <Input placeholder="房屋状态" size="default" style={{width: '250px'}}/>
+                            )}
+                        </FormItem>
+                        <FormItem label="地址属性"  {...formItemLayout}>
+                            {
+                                getFieldDecorator('addressType')(
+                                    <Input placeholder="地址属性" size="default" style={{width: '250px'}}/>
+                                )
+                            }
+                        </FormItem>
+                    </Form>
+                </Modal>
+
                 <div className="search" style={{marginBottom: '10px'}}>
                     <Form onSubmit={this._handleSubmit} layout="inline"
                           className="ant-advanced-search-form">
@@ -149,7 +256,8 @@ export default class app extends Component {
                                  })(<Input placeholder="请输入关键字" size="default" style={{width: '200px'}}/>)
                             }
                         </FormItem>
-                        <Button type="primary" onClick={this._handleSubmit}>查询</Button>
+                        <Button type="primary" onClick={this._handleSubmit}>查询</Button>&nbsp;&nbsp;
+                        <Button onClick={this._handleAdd}>新增</Button>
                     </Form>
                 </div>
                 <Spin spinning={houseCheckSearchResult.loading}>

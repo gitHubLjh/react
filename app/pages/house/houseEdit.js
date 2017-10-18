@@ -1,12 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Button, Spin, Form, Input, message, Row, Col, Icon, Breadcrumb, Tooltip } from 'antd'
+import { Button, Spin, Form, Input, message, Row, Col, Icon, Breadcrumb } from 'antd'
 import { fetchHouseDetail } from 'actions/house'
 import { push } from 'react-router-redux'
+import ReactQuill from 'react-quill'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, Tooltip} from 'recharts';
 
 const FormItem = Form.Item
-
+/**
+ * 1.布局
+ * 2.富文本编辑器
+ * 3.统计图
+ * 4.做一个楼盘图组件
+ */
 @Form.create({
     onFieldsChange(props, items) {
     },
@@ -33,6 +40,7 @@ export default class Edit extends Component {
         this._handleBack = this._handleBack.bind(this)
         this._handleSubmit = this._handleSubmit.bind(this)
         this.hasErrors = this.hasErrors.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
@@ -70,7 +78,9 @@ export default class Edit extends Component {
             callback();
         }
     }
-
+    handleChange(value) {
+        console.log(value)
+    }
     render() {
         const { houseDetailResult, form} = this.props
         const { getFieldDecorator,getFieldsError } = form
@@ -84,6 +94,52 @@ export default class Edit extends Component {
                 sm: { span: 16 },
             },
         };
+        const data = [
+            {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
+            {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
+            {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
+            {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
+            {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
+            {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
+            {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
+        ];
+        const modules= {
+            toolbar: [
+                ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                ['blockquote', 'code-block'],
+
+                [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                [{ 'direction': 'rtl' }],                         // text direction
+
+                [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+
+                ['clean']                                         // remove formatting button
+            ],
+        }
+        // 功能和显示分开，没有相关显示也可使用对应功能，如粘贴一些红色字，但并没有字体颜色设置
+        const formats=[
+            'bold', 'italic', 'underline', 'strike',
+            'blockquote','code-block',
+            'header',
+            'list', 'bullet',
+            'script',
+            'indent',
+            'direction',
+            'size',
+            'header',
+            'color','background',
+            'font',
+            'align',
+            'clean'
+        ]
         return (
             <div className="page">
                 <Breadcrumb>
@@ -93,18 +149,11 @@ export default class Edit extends Component {
                     <Breadcrumb.Item>An Application</Breadcrumb.Item>
                 </Breadcrumb>
                 <Spin spinning={houseDetailResult.loading}>
-                    <Form onSubmit={this._handleSubmit} layout="inline"  className="ant-advanced-search-form">
-                        <Row gutter={16} style={{padding:5}}>
+                    <Form onSubmit={this._handleSubmit} layout="inline">
+                        <Row gutter={16} >
                             <Col span={12} >
-                                <FormItem label={(
-                                            <span>
-                                                <Tooltip title="请输入建筑物地址?">
-                                                    建筑物地址 <Icon type="question-circle-o" />
-                                                </Tooltip>
-                                            </span>
-                                          )}
-                                    {...formItemLayout}
-                                    hasFeedback>
+                                <FormItem hasFeedback
+                                    label='建筑物地址'>
                                     {getFieldDecorator('address', {
                                         rules: [{
                                             required: true, message: '请输入地址',
@@ -120,7 +169,7 @@ export default class Edit extends Component {
                                 </FormItem>
                             </Col>
                             <Col span={12} >
-                                <FormItem label="行政区划" hasFeedback  {...formItemLayout}>
+                                <FormItem label="行政区划" hasFeedback >
                                     {getFieldDecorator('division', {
                                         rules: [{
                                             required: true, message: 'Please input division',
@@ -133,9 +182,9 @@ export default class Edit extends Component {
                             </Col>
                         </Row>
 
-                        <Row gutter={16} style={{padding:5}}>
+                        <Row gutter={16}>
                             <Col span={12} >
-                                <FormItem label="管辖单位" hasFeedback  {...formItemLayout}>
+                                <FormItem label="管辖单位" hasFeedback >
                                     {getFieldDecorator('institutions', {
                                         rules: [{
                                             required: true, message: 'Please input institutions',
@@ -147,7 +196,7 @@ export default class Edit extends Component {
                                 </FormItem>
                             </Col>
                             <Col span={12} >
-                                <FormItem label="管辖警员" hasFeedback  {...formItemLayout}>
+                                <FormItem label="管辖警员" hasFeedback >
                                     {getFieldDecorator('policeName', {
                                         rules: [{
                                             required: true, message: 'Please input policeName',
@@ -160,9 +209,9 @@ export default class Edit extends Component {
                             </Col>
                         </Row>
 
-                        <Row gutter={16} style={{padding:5}}>
+                        <Row gutter={16} >
                             <Col span={12} >
-                                <FormItem label="房屋状态" hasFeedback  {...formItemLayout}>
+                                <FormItem label="房屋状态" hasFeedback  >
                                     {getFieldDecorator('houseStatus', {
                                         rules: [{
                                             required: true, message: 'Please input houseStatus',
@@ -174,13 +223,38 @@ export default class Edit extends Component {
                                 </FormItem>
                             </Col>
                             <Col span={12} >
-                                <FormItem label="地址属性"  {...formItemLayout}>
+                                <FormItem label="地址属性"  >
                                     {getFieldDecorator('addressType', {
                                         initialValue: houseDetailResult.addressType,
                                     })(
                                         <Input placeholder="地址属性" size="default" style={{width: '250px'}}/>
                                     )}
                                 </FormItem>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <FormItem label="备注"/>
+                                <ReactQuill value="fdfdsfds" placeholder="请输入备注" theme="snow"
+                                            onChange={this.handleChange}
+                                            modules={modules}
+                                            formats={formats}/>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <LineChart width={730} height={250} data={data}
+                                           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line type="monotone" dataKey="pv" stroke="#8884d8" />
+                                    <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                                </LineChart>
                             </Col>
                         </Row>
                         <Row gutter={16} style={{padding:10}}>

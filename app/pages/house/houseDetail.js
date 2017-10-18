@@ -65,6 +65,9 @@ export default class Detail extends Component {
                         </Col>
                     </Row>
                 </Spin>
+
+
+
             </div>
         )
     }

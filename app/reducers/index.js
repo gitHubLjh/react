@@ -12,6 +12,7 @@ import {
   houseCheckSearchQuery,
   houseDetailResult,
 } from './house'
+import { QRCodeStateResult } from './test'
 import {
   loginResponse,
 } from './common'
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
     houseCheckSearchResult,
     houseCheckSearchQuery,
     houseDetailResult,
+    QRCodeStateResult,
 });
 
 export default rootReducer;

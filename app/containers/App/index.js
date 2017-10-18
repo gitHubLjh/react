@@ -14,6 +14,10 @@ import TabList from './tabList'
 
 
 import '../../style/base.less'
+import 'react-quill/dist/quill.snow.css'
+import 'codemirror/lib/codemirror.css'
+import 'nprogress/nprogress.css'
+import 'rc-color-picker/assets/index.css'
 
 @connect(
     (state, props) => ({}),

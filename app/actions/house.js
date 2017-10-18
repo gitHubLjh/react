@@ -26,3 +26,6 @@ export const fetchHouseDetail = createAjaxAction(
     requestHouseDetail,
     recevieHouseDetail
 );
+
+export const toggleModelWindow = createAction('toggle add house model window')
+
