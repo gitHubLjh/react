@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button } from 'antd'
-
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button} from 'antd'
 
 @connect(
     (state, props) => ({
@@ -10,6 +9,7 @@ import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Butto
 )
 
 export default class popCheck extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -28,9 +28,9 @@ export default class popCheck extends Component {
 
     render() {
         return (
-          <div className="page">
-            <Button onClick={this.handleClick.bind(this)}>点击按钮</Button>
-          </div>
+            <div className="page">
+                <Button onClick={this.handleClick.bind(this)}>点击按钮</Button>
+            </div>
         )
     }
 }

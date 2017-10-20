@@ -8,6 +8,10 @@ import QRCode from 'qrcode.react'
 import FreeScrollBar from 'react-free-scrollbar';
 import NProgress from 'nprogress'
 import ColorPicker from 'rc-color-picker';
+import SlideShow from 'react-image-slideshow'
+import Gallery from 'react-image-gallery'
+import { Broadcaster, Viewer } from 'svgreact'
+
 import {
     changeQRCodeColor,
     changeQRCodeLevel,
@@ -43,15 +47,85 @@ export default class popCheck extends Component {
     // 创建组件时调用
     constructor(props) {
         super(props)
+        this.state = {
+            protoImgs: [
+                'http://ww1.sinaimg.cn/large/d8e32accgw1f69b7ifm4gj20qo0qon3e.jpg',
+                'http://ww1.sinaimg.cn/large/d8e32accgw1f62keeub2uj21kw2dc4pa.jpg',
+                'http://ww4.sinaimg.cn/large/d8e32accgw1f5vv1j1leij21kw11x4a5.jpg',
+                'http://ww4.sinaimg.cn/large/d8e32accgw1f57j2kvgaoj21kw2dcx6p.jpg',
+            ],
+            imageData: [
+                {
+                    url  : 'http://ww1.sinaimg.cn/large/d8e32accgw1f69b7ifm4gj20qo0qon3e.jpg',
+                    title: '图片2',
+                    text : '这里是图片2的说明文字'
+                },
+                {
+                    url  : 'http://ww1.sinaimg.cn/large/d8e32accgw1f62keeub2uj21kw2dc4pa.jpg',
+                    title: '图片3',
+                    text : '这里是图片3的说明文字'
+                },
+                {
+                    url  : 'http://ww4.sinaimg.cn/large/d8e32accgw1f5vv1j1leij21kw11x4a5.jpg',
+                    title: '图片5',
+                    text : '这里是图片5的说明文字'
+                },
+                {
+                    url  : 'http://ww4.sinaimg.cn/large/d8e32accgw1f57j2kvgaoj21kw2dcx6p.jpg',
+                    title: '图片6',
+                    text : '这里是图片6的说明文字'
+                },
+                {
+                    url  : 'http://ww2.sinaimg.cn/large/d8e32accgw1f57j2b7dytj21kw2dc7wh.jpg',
+                    title: '图片7',
+                    text : '这里是图片7的说明文字'
+                },
+                {
+                    url  : 'http://ww3.sinaimg.cn/large/d8e32accgw1f51ydnrg2mj21kw24c7wh.jpg',
+                    title: '图片8',
+                    text : '这里是图片8的说明文字'
+                },
+                {
+                    url  : 'http://ww1.sinaimg.cn/large/d8e32accgw1f4yf8z8z16j21kw262nlp.jpg',
+                    title: '图片9',
+                    text : '这里是图片9的说明文字'
+                },
+                {
+                    url  : 'http://ww3.sinaimg.cn/large/d8e32accgw1f443p0dxd3j21kw2dc7wh.jpg',
+                    title: '图片10',
+                    text : '这里是图片10的说明文字'
+                },
+                {
+                    url  : 'http://ww2.sinaimg.cn/large/d8e32accgw1f443pbvvj2j21kw2dc4qp.jpg',
+                    title: '图片11',
+                    text : '这里是图片11的说明文字'
+                },
+                {
+                    url  : 'http://ww2.sinaimg.cn/large/d8e32accgw1f3cxkf16boj21kw11xqgq.jpg',
+                    title: '图片12',
+                    text : '这里是图片12的说明文字'
+                },
+                {
+                    url  : 'http://ww2.sinaimg.cn/large/d8e32accgw1f3cxl55881j21kw2dc1kx.jpg',
+                    title: '图片13',
+                    text : '这里是图片13的说明文字'
+                }
+            ]
+        };
+
         this.onCopy = this.onCopy.bind(this)
         this.changeColorHandler = this.changeColorHandler.bind(this)
         this.changeLevelHandler = this.changeLevelHandler.bind(this)
         this.updateCodeHandler = this.updateCodeHandler.bind(this)
         this.changeCodeMirrorModeHandler = this.changeCodeMirrorModeHandler.bind(this)
         this.changeCodeMirrorReadOnlyHandler = this.changeCodeMirrorReadOnlyHandler.bind(this)
+        this.handlePrototypeImageClick = this.handlePrototypeImageClick.bind(this);
         // 设置开始值，默认0.8
         NProgress.configure({ minimum: 0.1 });
         NProgress.configure({ showSpinner: false });
+
+
+
     }
 
     changeColorHandler(colors) {
@@ -96,6 +170,10 @@ export default class popCheck extends Component {
         NProgress.set(0.3);
         console.log('will mount')
     }
+
+    handlePrototypeImageClick(index) {
+        this.refs.SlideShow.handleModalOpen(index);
+    }
     /**
      * render方法调用两次
      * 1.组件挂载时调用，此时只能使用本组建的state，不能使用父组件中的state
@@ -116,6 +194,35 @@ export default class popCheck extends Component {
             66: 'Q',
             100: 'H',
         };
+        const imgsData = [
+            {
+                url  : 'http://ww1.sinaimg.cn/large/d8e32accgw1f69b7ifm4gj20qo0qon3e.jpg',
+                title: '图片2',
+                text : '这里是图片2的说明文字'
+            },
+            {
+                url  : 'http://ww1.sinaimg.cn/large/d8e32accgw1f62keeub2uj21kw2dc4pa.jpg',
+                title: '图片3',
+                text : '这里是图片3的说明文字'
+            },
+            {
+                url  : 'http://ww4.sinaimg.cn/large/d8e32accgw1f5vv1j1leij21kw11x4a5.jpg',
+                title: '图片5',
+                text : '这里是图片5的说明文字'
+            },
+            {
+                url  : 'http://ww4.sinaimg.cn/large/d8e32accgw1f57j2kvgaoj21kw2dcx6p.jpg',
+                title: '图片6',
+                text : '这里是图片6的说明文字'
+            },
+        ]
+        const protoImgs = [
+            // 'http://ww1.sinaimg.cn/large/d8e32accgw1f69b7ifm4gj20qo0qon3e.jpg',
+            // 'http://ww1.sinaimg.cn/large/d8e32accgw1f62keeub2uj21kw2dc4pa.jpg',
+            // 'http://ww4.sinaimg.cn/large/d8e32accgw1f5vv1j1leij21kw11x4a5.jpg',
+            // 'http://ww4.sinaimg.cn/large/d8e32accgw1f57j2kvgaoj21kw2dcx6p.jpg',
+        ]
+
         return (
             <div className="page">
                 <FreeScrollBar>
@@ -141,9 +248,21 @@ export default class popCheck extends Component {
                         <Option value="xml">xml</Option>
                         <Option value="json">json</Option>
                         <Option value="markdown">markdown</Option>
-                    </Select>&nbsp;&nbsp;
-                    ReadOnly<Switch checkedChildren={'on'} unCheckedChildren={'off'}  defaultChecked={false} onChange={this.changeCodeMirrorReadOnlyHandler} />,
+                    </Select>
+                    ReadOnly<Switch style={{width:25}} checkedChildren={'on'} unCheckedChildren={'off'}  defaultChecked={false} onChange={this.changeCodeMirrorReadOnlyHandler} />,
                     <CodeMirror autoFocus={true} value={QRCodeStateResult.CodeMirrorContent} options={options} onChange={this.updateCodeHandler} />
+                    <div>
+                        <img src="http://ww1.sinaimg.cn/large/d8e32accgw1f62keeub2uj21kw2dc4pa.jpg" style={{width:100,height:100}}
+                             onClick={this.handlePrototypeImageClick} />
+                        {/* <Gallery imgs={this.state.protoImgs} maxShow={10} onImgClick={this.handlePrototypeImageClick}/>*/}
+                        <SlideShow imgs={this.state.imageData}  ref="SlideShow" />
+                    </div>
+                    <div>
+                        <Broadcaster onWbToolsChange={(wBToolsInfo) => {
+                            console.log(wBToolsInfo)
+                        }}/>
+                        <Viewer />
+                    </div>
                     <Sub />
                 </FreeScrollBar>
             </div>

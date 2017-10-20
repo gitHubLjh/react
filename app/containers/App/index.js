@@ -18,6 +18,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'codemirror/lib/codemirror.css'
 import 'nprogress/nprogress.css'
 import 'rc-color-picker/assets/index.css'
+import 'water-wave/style.css';
 
 @connect(
     (state, props) => ({}),
